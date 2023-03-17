@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Daily Meals',
       theme: ThemeData(
+        primaryColor: Colors.pink,
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.pink)
             .copyWith(secondary: Colors.amber),
         fontFamily: 'Raleway',

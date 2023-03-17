@@ -5,29 +5,48 @@ import 'package:meals/screens/favorite_screen.dart';
 
 import 'categories_screen.dart';
 
-class TabsScreen extends StatelessWidget {
+class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
+
+  @override
+  State<TabsScreen> createState() => _TabsScreenState();
+}
+
+class _TabsScreenState extends State<TabsScreen> {
+  int _selectedScreenIndex = 0;
+  final List<Map<String, Object>> _screens = [
+    const {'title': 'Categories', 'screen': CategoriesScreen()},
+    const {'title': 'Favorites', 'screen': FavoriteScreen()},
+  ];
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
+      initialIndex: 0,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Let\'s Cook'),
-          bottom: const TabBar(tabs: [
-            Tab(
-              icon: Icon(Icons.category),
-              text: 'Categories',
-            ),
-            Tab(
-              icon: Icon(Icons.favorite),
-              text: 'Favorites',
-            )
-          ]),
+          title: Text(_screens[_selectedScreenIndex]['title'] as String),
         ),
-        body: const TabBarView(
-          children: [CategoriesScreen(), FavoriteScreen()],
+        body: _screens[_selectedScreenIndex]['screen'] as Widget?,
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (value) => setState(() {
+            _selectedScreenIndex = value;
+          }),
+          backgroundColor: Theme.of(context).primaryColor,
+          unselectedItemColor: Colors.white,
+          selectedItemColor: Theme.of(context).colorScheme.secondary,
+          currentIndex: _selectedScreenIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              label: 'Categories',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.star),
+              label: 'Favoritos',
+            )
+          ],
         ),
       ),
     );
