@@ -12,7 +12,8 @@ class MealItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.of(context)
-          .pushNamed(AppRoutes.MEAL_DETAIL, arguments: meal),
+          .pushNamed(AppRoutes.MEAL_DETAIL, arguments: meal)
+          .then((result) => {}),
       child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
