@@ -5,15 +5,15 @@ import '../models/category.dart';
 import '../models/meal.dart';
 
 class CategoriesMealsScreen extends StatelessWidget {
-  final List<Meal> meals = [];
+  final List<Meal>? meals;
 
-  CategoriesMealsScreen({super.key, meals});
+  CategoriesMealsScreen({super.key, this.meals});
 
   @override
   Widget build(BuildContext context) {
     final category = ModalRoute.of(context)!.settings.arguments as Category;
 
-    final categoriesMeals = meals.where((meal) {
+    final categoriesMeals = meals!.where((meal) {
       return meal.categories.contains(category.id);
     }).toList();
 

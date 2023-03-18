@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:meals/screens/categories_meals_screen.dart';
 import 'package:meals/screens/categories_screen.dart';
@@ -21,10 +23,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  var settings = Settings();
   List<Meal> _availableMeals = dummyMeals;
+  List<Meal> _favoriteMeals = [];
 
   void _filterMeals(Settings settings) {
     setState(() {
+      this.settings = settings;
       _availableMeals = dummyMeals.where((meal) {
         return (!(settings.isGlutenFree && !meal.isGlutenFree) &&
             !(settings.isLactoseFree && !meal.isLactoseFree) &&
@@ -32,6 +37,18 @@ class _MyAppState extends State<MyApp> {
             !(settings.isVegetarian && !meal.isVegetarian));
       }).toList();
     });
+  }
+
+  void _toggleFavorite(Meal meal) {
+    setState(() {
+      _isFavorite(meal)
+          ? _favoriteMeals.remove(meal)
+          : _favoriteMeals.add(meal);
+    });
+  }
+
+  bool _isFavorite(Meal meal) {
+    return _favoriteMeals.contains(meal);
   }
 
   @override
@@ -56,20 +73,21 @@ class _MyAppState extends State<MyApp> {
       ),
       initialRoute: '/',
       routes: {
-        AppRoutes.HOME: (context) => const TabsScreen(),
+        AppRoutes.HOME: (context) => TabsScreen(favoriteMeals: _favoriteMeals),
         AppRoutes.CATEGORIES_MEALS: (context) => CategoriesMealsScreen(
               meals: _availableMeals,
             ),
-        AppRoutes.MEAL_DETAIL: (context) => const MealDetailScreen(),
+        AppRoutes.MEAL_DETAIL: (context) => MealDetailScreen(
+            onToggleFavorite: _toggleFavorite, isFavorite: _isFavorite),
         AppRoutes.SETTINGS: (context) =>
-            SettingsScreen(onSettingsChanged: _filterMeals)
+            SettingsScreen(settings: settings, onSettingsChanged: _filterMeals)
       },
       // onGenerateRoute: (settings) {
 
       // },
       onUnknownRoute: (settings) {
         return MaterialPageRoute(
-          builder: (context) => const TabsScreen(),
+          builder: (context) => TabsScreen(favoriteMeals: _favoriteMeals),
         );
       },
     );
